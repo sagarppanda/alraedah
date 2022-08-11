@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
@@ -39,7 +40,56 @@ public class DetectCycleControllerTest {
     @BeforeEach
     public void setUp() {
         mvc = MockMvcBuilders.standaloneSetup(underTest)
+                .setControllerAdvice(new ControllerAdvice())
                 .build();
+    }
+
+    @Test
+    void itShouldThrowNotEmptyExceptionWhenRequestIsEmpty() throws Exception {
+        // given
+        var requestDto = DetectCycleRequestDto.builder().request(emptyList()).build();
+        var requestJson = getObjectWriter().writeValueAsString(requestDto);
+
+        // when
+        var response = mvc.perform(
+                        post(DETECT_CYCLE_URL)
+                                .contentType(APPLICATION_JSON)
+                                .content(requestJson))
+                .andExpect(status().isBadRequest())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        // then
+        assertThat(response).contains("\"status\":400,\"fields\":{\"request\":\"should not be empty\"}");
+    }
+
+    @Test
+    void itShouldThrowNotEmptyExceptionWhenIntegersEmpty() throws Exception {
+        // given
+        var requestJson = "{\n" +
+                "  \"request\": [\n" +
+                "    [\n" +
+                "      \n" +
+                "    ],\n" +
+                "    [\n" +
+                "      \n" +
+                "    ]\n" +
+                "  ]\n" +
+                "}";
+
+        // when
+        var response = mvc.perform(
+                        post(DETECT_CYCLE_URL)
+                                .contentType(APPLICATION_JSON)
+                                .content(requestJson))
+                .andExpect(status().isBadRequest())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        // then
+        assertThat(response).contains("\"status\":400,\"fields\":{\"request[1]\":\"should not be empty\",\"request[0]\":\"should not be empty\"}");
     }
 
     @Test

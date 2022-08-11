@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @NoArgsConstructor
@@ -13,6 +14,7 @@ import java.util.List;
 @Builder
 @Data
 public class DetectCycleRequestDto {
+    @NotEmpty(message = "should not be empty")
     @ApiModelProperty(value = "List of integers", required = true)
-    List<List<Integer>> request;
+    List<@NotEmpty(message = "should not be empty") List<Integer>> request;
 }

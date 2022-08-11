@@ -8,11 +8,13 @@ import com.alraedah.cycle.model.DetectCycleModel;
 import com.alraedah.cycle.service.DetectCycleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -25,7 +27,7 @@ public class DetectCycleController implements SwaggerDetectCycleController {
     private final DetectCycleService detectCycleService;
 
     @PostMapping("/detect")
-    public ResponseEntity<DetectCycleResponseDto> detect(@RequestBody DetectCycleRequestDto request) {
+    public ResponseEntity<DetectCycleResponseDto> detect(@RequestBody @Valid DetectCycleRequestDto request) {
 
         List<DetectCycleModel> detectCycleModels = detectCycleService.detectCycle(request.getRequest());
 

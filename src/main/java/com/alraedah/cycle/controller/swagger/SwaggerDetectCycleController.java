@@ -8,15 +8,17 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 
+import javax.validation.Valid;
+
 @Api(value = "/alraedah/v1")
 public interface SwaggerDetectCycleController {
 
-    @ApiOperation(value = "This endpoint detects occurence of cycle in array list")
+    @ApiOperation(value = "This endpoint detects occurrence of cycle in array list")
     @ApiResponses(
             value = {
                     @ApiResponse(
                             code = 200,
-                            message = "All transactions have been successfuly validated"
+                            message = "All transactions have been successfully validated"
                     )
             }
     )
